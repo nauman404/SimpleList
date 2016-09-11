@@ -3,7 +3,7 @@
 ### 1. What is the major difference between an ​ abstract ​class and an ​ interface ?
 
 Main difference is methods of a Java interface are implicitly abstract and cannot have implementations. A Java abstract class can have instance methods that implements a default behavior.
-
+```java
 Example:
 //abstract class
 abstract class Sum{
@@ -26,9 +26,10 @@ class AbstractDemo extends Sum{
       obj.disp();
    }
 }
+```
 Output:10
 Method of class Sum
-
+```java
 interface SumInterface
 {
    /* All the methods are public abstract by default
@@ -56,6 +57,7 @@ class DemoInterface implements SumInterface
       obj.disp();
   }
 }
+```
 Output:10
 Method of class Sum
 
@@ -82,7 +84,7 @@ but inside a fragment you will have to do something like this:
 There are many ways to communicate hosting activity like getting activity reference and call public method etc, But best way is using an interface as a call back to the activity. The point of using interfaces in java is mainly flexibility in implementation. It enables you to reuse fragments (the main point of having fragments in the first place). If you create a method in the activity, you cannot reuse it when you want to do something different with a given fragment.
 
 Here is an example of Fragment to Activity communication:
-
+```java
 MainActivity.java
 /**
  * The main activity that communicates with the fragment(s)
@@ -126,9 +128,9 @@ MainActivity.java
     }
  }
 
-
+```
   
- 
+ ```java
  /**
  * Fragment that inflates a list view to display news headlines
  * 
@@ -184,6 +186,7 @@ MainActivity.java
         public void onNewsItemPicked(int position);
     }
  }
+ ```
  
 ### 5. Can you make an entire app without ever using ​ Fragments? Why or why not? Are there any special cases when you absolutely have to use or should use Fragments?
 
