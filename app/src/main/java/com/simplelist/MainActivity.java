@@ -16,9 +16,10 @@ public class MainActivity extends AppCompatActivity implements AddNameFragment.O
 
     private final static String TAG = MainActivity.class.getCanonicalName();
 
+    private final String LIST_FRAGMENT = "ListFragment";
+    private final String ADD_NAME_FRAGMENT = "AddNameFragment";
+
     private ListNameFragment mListNameFragment;
-    private final String LISTFRAGMENT = "ListFragment";
-    private final String ADDNAMEFRAGMENT = "AddNameFragment";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,7 +75,7 @@ public class MainActivity extends AppCompatActivity implements AddNameFragment.O
     {
         FragmentManager fm = getFragmentManager();
         if (fm.findFragmentById(R.id.container) == null) {
-            fm.beginTransaction().add(R.id.container, frag,LISTFRAGMENT).commit();
+            fm.beginTransaction().add(R.id.container, frag,LIST_FRAGMENT).commit();
         }
 
     }
@@ -85,13 +86,13 @@ public class MainActivity extends AppCompatActivity implements AddNameFragment.O
     private void showAddNameDialog() {
         FragmentManager fm = getFragmentManager();
         AddNameFragment mAddNameFragment = new AddNameFragment();
-        mAddNameFragment.show(fm, ADDNAMEFRAGMENT);
+        mAddNameFragment.show(fm, ADD_NAME_FRAGMENT);
     }
 
     @Override
     public void onNameAdded(String firstName, String lastName) {
         ListNameFragment listNameFragment = (ListNameFragment)
-                getFragmentManager().findFragmentByTag(LISTFRAGMENT);
+                getFragmentManager().findFragmentByTag(LIST_FRAGMENT);
 
         if (listNameFragment != null) {
             listNameFragment.addNewName(firstName,lastName);

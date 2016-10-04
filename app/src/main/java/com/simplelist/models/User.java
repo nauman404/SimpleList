@@ -12,7 +12,7 @@ public class User implements Serializable {
     /**
      *
      */
-    private static final long serialVersionUID = -6732971786342725319L;
+    private static final long SERIAL_VERSION_UID = -6732971786342725319L;
 
     private String mFirstName;
     private String mLastName;

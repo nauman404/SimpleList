@@ -1,7 +1,9 @@
 package com.simplelist.fragments;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -28,10 +30,11 @@ public class ListNameFragment extends Fragment {
 
     private final static String TAG = ListNameFragment.class.getCanonicalName();
 
-    ArrayList<User> users = new ArrayList<>();
-    Context mContext;
-    UserAdapter userAdapter;
-    View viewListName = null;
+    private ArrayList<User> mUsers;
+    private Context mContext;
+    private UserAdapter mUserAdapter;
+    private View mViewListName = null;
+    RecyclerView mUserRecycler;
 
     public ListNameFragment() {
     }
@@ -42,15 +45,53 @@ public class ListNameFragment extends Fragment {
         mContext= context;
     }
 
+    @SuppressWarnings("deprecation")
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            try {
+                mContext= activity;
+            } catch (ClassCastException e) {
+                throw new ClassCastException(activity.toString()
+                        + " must implement OnAddNameListener");
+            }
+        }
+    }
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        // Retain this Fragment so that it will not be destroyed when an orientation
+        setRetainInstance(true);
+
+        mUsers = new ArrayList<>();
+
+        try{
+            JSONArray values = setupDummyData();
+            for(int i=0; i<values.length(); i++){
+                JSONObject jsonObject = values.getJSONObject(i);
+                String firstName = jsonObject.getString("firstName");
+                String lastName = jsonObject.getString("lastName");
+                mUsers.add(new User(firstName,lastName));
+            }
+        }catch (JSONException e){
+
+        }
+
+        mUserAdapter = new UserAdapter(getActivity(), mUsers);
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        viewListName = inflater.inflate(R.layout.fragment_list_name,
+        mViewListName = inflater.inflate(R.layout.fragment_list_name,
                 container, false);
 
         initializeUI();
 
-        return viewListName;
+        return mViewListName;
     }
 
     /**
@@ -61,32 +102,19 @@ public class ListNameFragment extends Fragment {
         try {
 
             // Lookup the recyclerview in activity layout
-            RecyclerView rvUsers = (RecyclerView) viewListName.findViewById(R.id.rvUsers);
 
-            JSONArray values = setupDummyData();
-            for(int i=0; i<values.length(); i++){
-                JSONObject jsonObject = values.getJSONObject(i);
-                String firstName = jsonObject.getString("firstName");
-                String lastName = jsonObject.getString("lastName");
-                users.add(new User(firstName,lastName));
-            }
+            mUserRecycler = (RecyclerView) mViewListName.findViewById(R.id.rvUsers);
 
-            // Initialize contacts
-            //users= users.createContactsList(20);
-            // Create userAdapter passing in the sample user data
-            userAdapter = new UserAdapter(mContext, users);
             // Attach the userAdapter to the recyclerview to populate items
-            rvUsers.setAdapter(userAdapter);
+            mUserRecycler.setAdapter(mUserAdapter);
             // Set layout manager to position the items
-            rvUsers.setLayoutManager(new LinearLayoutManager(mContext));
-
+            mUserRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         } catch (Exception e) {
             Log.e(TAG, "Error while initialize UI components and message ="
                     + e.getMessage());
         }
     }
-
 
     /**
      *
@@ -126,7 +154,7 @@ public class ListNameFragment extends Fragment {
     }
 
     public void addNewName(String firstName, String lastName){
-        users.add(new User(firstName, lastName));
-        userAdapter.notifyDataSetChanged();
+        mUsers.add(new User(firstName, lastName));
+        mUserAdapter.notifyDataSetChanged();
     }
 }

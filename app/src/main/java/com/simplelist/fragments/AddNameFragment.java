@@ -15,6 +15,8 @@ import android.widget.EditText;
 import com.simplelist.R;
 import com.simplelist.utils.StaticMethod;
 
+import static com.simplelist.R.id.etFirstName;
+
 /**
  * Dialog Fragment to add First and Last Name
  * @author by Nauman Ashraf on 9/11/2016.
@@ -23,15 +25,15 @@ public class AddNameFragment extends DialogFragment implements View.OnClickListe
 
     private final static String TAG = AddNameFragment.class.getCanonicalName();
 
-    private EditText etFirstName;
-    private EditText etLastName;
-    private Button btnAdd;
-    private Button btnCancel;
+    private EditText mFirstNameEdit;
+    private EditText mLastNameEdit;
+    private Button mAddBtn;
+    private Button mCancelBtn;
 
-    private View viewAddName = null;
-    private Context localContext=null;
+    private View mAddNameView = null;
+    private Context mContext = null;
     private OnAddNameListener mCallback;
-    private Activity activity;
+    private Activity mActivity;
 
     public AddNameFragment() {
         // Empty constructor required for DialogFragment
@@ -40,14 +42,14 @@ public class AddNameFragment extends DialogFragment implements View.OnClickListe
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        // This makes sure that the container activity has implemented
+        // This makes sure that the container mActivity has implemented
         // the callback interface. If not, it throws an exception
         try {
-            activity = context instanceof Activity ? (Activity) context : null;
-            mCallback = (OnAddNameListener) activity;
+            mActivity = context instanceof Activity ? (Activity) context : null;
+            mCallback = (OnAddNameListener) mActivity;
 
         } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
+            throw new ClassCastException(mActivity.toString()
                     + " must implement OnAddNameListener");
         }
 
@@ -73,13 +75,13 @@ public class AddNameFragment extends DialogFragment implements View.OnClickListe
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        //setLocalContext(container.getContext());
+        //setmContext(container.getContext());
 
-        viewAddName = inflater.inflate(R.layout.fragment_add_name, container);
+        mAddNameView = inflater.inflate(R.layout.fragment_add_name, container);
 
         initializeUI();
 
-        return viewAddName;
+        return mAddNameView;
     }
 
     /**
@@ -91,15 +93,15 @@ public class AddNameFragment extends DialogFragment implements View.OnClickListe
 
             getDialog().setTitle("Enter Name");
 
-            etFirstName = (EditText) viewAddName.findViewById(R.id.etFirstName);
-            etLastName = (EditText) viewAddName.findViewById(R.id.etLastName);
-            btnAdd = (Button) viewAddName.findViewById(R.id.btnAdd);
-            btnCancel = (Button) viewAddName.findViewById(R.id.btnCancel);
-            btnAdd.setOnClickListener(this);
-            btnCancel.setOnClickListener(this);
+            mFirstNameEdit = (EditText) mAddNameView.findViewById(etFirstName);
+            mLastNameEdit = (EditText) mAddNameView.findViewById(R.id.etLastName);
+            mAddBtn = (Button) mAddNameView.findViewById(R.id.btnAdd);
+            mCancelBtn = (Button) mAddNameView.findViewById(R.id.btnCancel);
+            mAddBtn.setOnClickListener(this);
+            mCancelBtn.setOnClickListener(this);
 
             // Show soft keyboard automatically
-            etFirstName.requestFocus();
+            mFirstNameEdit.requestFocus();
 
         } catch (Exception e) {
             Log.e(TAG, "Error while initialize UI components and message ="
@@ -113,8 +115,8 @@ public class AddNameFragment extends DialogFragment implements View.OnClickListe
             case R.id.btnAdd:
                 if (validate()) {
                     try{
-                        String firstName = StaticMethod.capitalize(etFirstName.getText().toString());
-                        String lastName = StaticMethod.capitalize(etLastName.getText().toString());
+                        String firstName = StaticMethod.capitalize(mFirstNameEdit.getText().toString());
+                        String lastName = StaticMethod.capitalize(mLastNameEdit.getText().toString());
                         mCallback.onNameAdded(firstName,lastName);
                         this.dismiss();
                     }catch (ClassCastException cce) {
@@ -139,13 +141,13 @@ public class AddNameFragment extends DialogFragment implements View.OnClickListe
     private boolean validate() {
         boolean validated = true;
 
-        if (etFirstName.getText().toString().trim().equals("") || etFirstName.getText().toString().trim().length() == 0) {
-            etFirstName.setError("Please enter First Name");
+        if (mFirstNameEdit.getText().toString().trim().equals("") || mFirstNameEdit.getText().toString().trim().length() == 0) {
+            mFirstNameEdit.setError("Please enter First Name");
             validated = false;
         }
 
-        if (etLastName.getText().toString().trim().equals("") || etLastName.getText().toString().trim().length() == 0) {
-            etLastName.setError("Please enter Last Name");
+        if (mLastNameEdit.getText().toString().trim().equals("") || mLastNameEdit.getText().toString().trim().length() == 0) {
+            mLastNameEdit.setError("Please enter Last Name");
             validated = false;
         }
 
@@ -154,17 +156,17 @@ public class AddNameFragment extends DialogFragment implements View.OnClickListe
 
 
     /**
-     * @return the localContext
+     * @return the mContext
      */
-    public Context getLocalContext() {
-        return localContext;
+    public Context getmContext() {
+        return mContext;
     }
 
     /**
-     * @param localContext the localContext to set
+     * @param mContext the mContext to set
      */
-    public void setLocalContext(Context localContext) {
-        this.localContext = localContext;
+    public void setmContext(Context mContext) {
+        this.mContext = mContext;
     }
 
     /**
